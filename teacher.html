@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Portal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <h1>Teacher Portal</h1>
+    <h2>Student Grading Table</h2>
+    <table id="gradingTable">
+        <thead>
+            <tr>
+                <th>Student Name</th>
+                <th>Subject 1</th>
+                <th>Subject 2</th>
+                <th>Subject 3</th>
+                <th>Subject 4</th>
+                <th>Subject 5</th>
+                <th>Attendance</th>
+                <th>Behavior</th>
+                <th>Extra-Curricular</th>
+                <th>Total Grading</th>
+                <th>Grade</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <form id="studentForm">
+        <input type="text" name="student_name" id="studentName" placeholder="Student Name" required>
+        <input type="number" name="subject1" id="subject1" placeholder="Subject 1" required>
+        <input type="number" name="subject2" id="subject2" placeholder="Subject 2" required>
+        <input type="number" name="subject3" id="subject3" placeholder="Subject 3" required>
+        <input type="number" name="subject4" id="subject4" placeholder="Subject 4" required>
+        <input type="number" name="subject5" id="subject5" placeholder="Subject 5" required>
+        <input type="text" name="attendance" id="attendance" placeholder="Attendance (A-E)" required>
+        <input type="text" name="behavior" id="behavior" placeholder="Behavior (A-E)" required>
+        <input type="number" name="extra_curricular" id="extraCurricular" placeholder="Extra-Curricular Activities" required>
+        <button type="submit" id="addStudentButton">Add Student</button>
+    </form>
+
+    <script>
+        const gradingTable = document.getElementById('gradingTable');
+        const studentForm = document.getElementById('studentForm');
+
+        function calculateTotalGrading(subject1, subject2, subject3, subject4, subject5, attendanceGrade, behaviorGrade, extraCurricular) {
+            const attendancePoints = (attendanceGrade === "A" ? 100 : attendanceGrade === "B" ? 90 : attendanceGrade === "C" ? 80 : attendanceGrade === "D" ? 70 : attendanceGrade === "E" ? 60 : 0);
+            const behaviorPoints = (behaviorGrade === "A" ? 100 : behaviorGrade === "B" ? 90 : behaviorGrade === "C" ? 80 : behaviorGrade === "D" ? 70 : behaviorGrade === "E" ? 60 : 0);
+
+            const totalGrading = (subject1 + subject2 + subject3 + subject4 + subject5 + attendancePoints + behaviorPoints + extraCurricular) / 8;
+
+            let grade;
+            if (totalGrading >= 91) grade = "A";
+            else if (totalGrading >= 81) grade = "B";
+            else if (totalGrading >= 71) grade = "C";
+            else if (totalGrading >= 61) grade = "D";
+            else if (totalGrading >= 51) grade = "E";
+            else grade = "F";
+
+            return { totalGrading, grade };
+        }
+
+        studentForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            const studentName = document.getElementById('studentName').value;
+            const subject1 = parseInt(document.getElementById('subject1').value);
+            const subject2 = parseInt(document.getElementById('subject2').value);
+            const subject3 = parseInt(document.getElementById('subject3').value);
+            const subject4 = parseInt(document.getElementById('subject4').value);
+            const subject5 = parseInt(document.getElementById('subject5').value);
+            const attendance = document.getElementById('attendance').value.toUpperCase();
+            const behavior = document.getElementById('behavior').value.toUpperCase();
+            const extraCurricular = parseInt(document.getElementById('extraCurricular').value);
+
+            const { totalGrading, grade } = calculateTotalGrading(subject1, subject2, subject3, subject4, subject5, attendance, behavior, extraCurricular);
+
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td>${studentName}</td>
+                <td>${subject1}</td>
+                <td>${subject2}</td>
+                <td>${subject3}</td>
+                <td>${subject4}</td>
+                <td>${subject5}</td>
+                <td>${attendance}</td>
+                <td>${behavior}</td>
+                <td>${extraCurricular}</td>
+                <td>${totalGrading.toFixed(2)}</td>
+                <td>${grade}</td>
+                <td><button class="delete">Delete</button></td>
+            `;
+            gradingTable.querySelector('tbody').appendChild(newRow);
+
+            newRow.querySelector('.delete').addEventListener('click', () => newRow.remove());
+
+            // Store the student data in local storage
+            localStorage.setItem(studentName, JSON.stringify({ subject1, subject2, subject3, subject4, subject5, attendance, behavior, extraCurricular, totalGrading, grade }));
+
+            studentForm.reset();
+        });
+    </script>
+</body>
+
+</html>

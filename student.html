@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <h1>Student Portal</h1>
+    <h2>Your Grades</h2>
+
+    <form id="studentSearchForm">
+        <input type="text" id="studentSearchName" placeholder="Enter your name to view details" required>
+        <button type="submit" id="searchButton">Search</button>
+    </form>
+
+    <div id="studentDetails" style="display:none;">
+        <h3>Student Details</h3>
+        <p><strong>Name:</strong> <span id="studentNameDisplay"></span></p>
+        <p><strong>Subject 1:</strong> <span id="subject1Display"></span></p>
+        <p><strong>Subject 2:</strong> <span id="subject2Display"></span></p>
+        <p><strong>Subject 3:</strong> <span id="subject3Display"></span></p>
+        <p><strong>Subject 4:</strong> <span id="subject4Display"></span></p>
+        <p><strong>Subject 5:</strong> <span id="subject5Display"></span></p>
+        <p><strong>Attendance:</strong> <span id="attendanceDisplay"></span></p>
+        <p><strong>Behavior:</strong> <span id="behaviorDisplay"></span></p>
+        <p><strong>Extra-Curricular:</strong> <span id="extraCurricularDisplay"></span></p>
+        <p><strong>Total Grading:</strong> <span id="totalGradingDisplay"></span></p>
+        <p><strong>Grade:</strong> <span id="gradeDisplay"></span></p>
+    </div>
+
+    <script>
+        const studentSearchForm = document.getElementById('studentSearchForm');
+        const studentSearchName = document.getElementById('studentSearchName');
+        const studentDetails = document.getElementById('studentDetails');
+        const studentNameDisplay = document.getElementById('studentNameDisplay');
+        const subject1Display = document.getElementById('subject1Display');
+        const subject2Display = document.getElementById('subject2Display');
+        const subject3Display = document.getElementById('subject3Display');
+        const subject4Display = document.getElementById('subject4Display');
+        const subject5Display = document.getElementById('subject5Display');
+        const attendanceDisplay = document.getElementById('attendanceDisplay');
+        const behaviorDisplay = document.getElementById('behaviorDisplay');
+        const extraCurricularDisplay = document.getElementById('extraCurricularDisplay');
+        const totalGradingDisplay = document.getElementById('totalGradingDisplay');
+        const gradeDisplay = document.getElementById('gradeDisplay');
+
+        studentSearchForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            const studentName = studentSearchName.value;
+
+            // Check if the student data is stored in localStorage
+            const studentData = JSON.parse(localStorage.getItem(studentName));
+
+            if (studentData) {
+                // Display the student details
+                studentNameDisplay.textContent = studentName;
+                subject1Display.textContent = studentData.subject1;
+                subject2Display.textContent = studentData.subject2;
+                subject3Display.textContent = studentData.subject3;
+                subject4Display.textContent = studentData.subject4;
+                subject5Display.textContent = studentData.subject5;
+                attendanceDisplay.textContent = studentData.attendance;
+                behaviorDisplay.textContent = studentData.behavior;
+                extraCurricularDisplay.textContent = studentData.extraCurricular;
+                totalGradingDisplay.textContent = studentData.totalGrading.toFixed(2);
+                gradeDisplay.textContent = studentData.grade;
+
+                // Show the student details section
+                studentDetails.style.display = 'block';
+            } else {
+                // If no data found for the student
+                alert("Student details not found.");
+                studentDetails.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+
+</html>
